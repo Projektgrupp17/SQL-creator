@@ -1,4 +1,10 @@
-package fredriksonsound.sql.DB;
+/**
+ * Author: Magnus Fredriksson
+ */
+
+package kth.projektgrupp17.sql.DB;
+
+import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -8,6 +14,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.concurrent.atomic.AtomicBoolean;
 
+/**
+ * Represents a foreign key constraint.
+ */
 class ForeignKey {
     final Table fromTable;
     final Column fromKey;
@@ -17,6 +26,9 @@ class ForeignKey {
     }
 }
 
+/**
+ * Represents a column of a schema table
+ */
 class Column {
     boolean isAutoNumber = false;
     int autonumberIndex = 1;
@@ -32,22 +44,20 @@ class Column {
         return this;
     }
 
-    public Column(String name, String attrType) {
-        this(name, false, false, null, attrType);
-    }
-    public Column(String name, boolean unique, String attrType) {
-        this(name, unique, false, null, attrType);
-    }
-    public Column(String name,boolean unique, boolean pk, String attrType) {
-        this(name, unique, pk, null, attrType);
-    }
-    public Column(String name, boolean unique, boolean pk, ForeignKey fk, String attrType) {
-        this(name, unique, pk, fk, true, attrType);
-    }
+    /**
+     * Create a new column in the table
+     *
+     * @param name     column name
+     * @param unique   is UNIQUE
+     * @param pk       is PRIMARY KEY
+     * @param fk       has FOREIGN KEY constraint
+     * @param notNull  is NOT NULL
+     * @param attrType attribute type, e.g. varchar(16)
+     */
     public Column(String name, boolean unique, boolean pk, ForeignKey fk, boolean notNull, String attrType) {
-        if(attrType.equals("string"))
+        if (attrType.equals("string"))
             attrType = "varchar(128)";
-        if(fk != null && !fk.fromKey.attrType.toLowerCase().equals(attrType.toLowerCase()))
+        if (fk != null && !fk.fromKey.attrType.toLowerCase().equals(attrType.toLowerCase()))
             throw new RuntimeException("Foreign key type must match");
 
         this.name = name;
@@ -57,22 +67,51 @@ class Column {
         this.notNull = notNull;
         this.attrType = attrType;
     }
+    public Column(String name, String attrType) {
+        this(name, false, false, null, attrType);
+    }
+    public Column(String name, boolean unique, String attrType) {
+        this(name, unique, false, null, attrType);
+    }
+    public Column(String name, boolean unique, boolean pk, String attrType) {
+        this(name, unique, pk, null, attrType);
+    }
+    public Column(String name, boolean unique, boolean pk, ForeignKey fk, String attrType) {
+        this(name, unique, pk, fk, true, attrType);
+    }
 }
 
+
+/**
+ * Represents a table in a schema
+ */
 public class Table {
     ArrayList<Column> primaryKey = new ArrayList<>();
     String tableName;
     ArrayList<Column> columns = new ArrayList<>();
     ArrayList<String[]> rows = new ArrayList<>();
 
+    /**
+     * Creates a new table of given name
+     * @param t the table name
+     */
     public Table(String t) { this.tableName = t; }
 
+    /**
+     * Creates a table from a list of columns
+     * @param t the table name
+     * @param c the list of columns
+     */
     public Table(String t, ArrayList<Column> c) { this(t); this.columns = c; }
 
     public void populateFromCSV() {
         this.populateFromCSV(this.tableName.toLowerCase() + "_data_ok.dat");
     }
 
+    /**
+     * Populates a table with data given in CSV format, first row should be column names
+     * @param filePath the path to the CSV file
+     */
     public void populateFromCSV(String filePath) {
         String fileContents = null;
         try {
@@ -97,6 +136,10 @@ public class Table {
         }
     }
 
+    /**
+     * Inserts a row into the table
+     * @param values the field values
+     */
     public void insert(String ... values) {
         String[] newRow = new String[columns.size()];
         for(int i = 0; i < columns.size(); i++) {
@@ -108,6 +151,10 @@ public class Table {
         rows.add(newRow);
     }
 
+    /**
+     * Inserts a row from key value map
+     * @param values the field keys and values to insert
+     */
     public void insert(HashMap<String,String> values) {
         String[] newRow = new String[columns.size()];
         values.forEach((col,val) -> {
@@ -124,19 +171,39 @@ public class Table {
         //TODO check table (duplicate rows etc.)
     }
 
+    /**
+     * Modifies the columns of the table that match the pattern
+     * @param newVals the new values
+     * @param pattern the pattern to mactch
+     */
     public void update(HashMap<String, String> newVals, HashMap<String, String> pattern) {
         ArrayList<String[]> ar = matchRows(pattern);
         //Do stuff to the rows
+        throw new NotImplementedException();
     }
 
+    /**
+     * deletes rows from the table that match pattern
+     * @param pattern the pattern to match rows by
+     */
     public void delete(HashMap<String, String> pattern) {
         matchRows(pattern).forEach(r -> rows.remove(r));
     }
 
+    /**
+     * Selects rows from the table matching a pattern
+     * @param pattern the pattern
+     * @return a new Table, that has only the matching rows in it
+     */
     public ArrayList<String[]> select(HashMap<String, String> pattern){
         return matchRows(pattern);
     }
 
+    /**
+     * Adds a column to the table
+     * @param c a column to add
+     * @return the updated table (chaining interface)
+     */
     public Table addColumn(Column c) {
         columns.forEach(col -> {
             if (col.name.toLowerCase().equals(c.name.toLowerCase()))
@@ -148,6 +215,11 @@ public class Table {
         return this;
     }
 
+    /**
+     * Performs a math by pattern on the table
+     * @param pattern the pattern
+     * @return Arraylist of all the matching rows
+     */
     private ArrayList<String[]> matchRows(HashMap<String, String> pattern) {
         ArrayList<String[]> resultRows = new ArrayList<>();
         rows.forEach(r -> {
@@ -163,6 +235,11 @@ public class Table {
         return resultRows;
     }
 
+    /**
+     * gets the column of the given name
+     * @param colName the name
+     * @return the matching column or null
+     */
     Column getColumn(String colName) {
         for(Column c : columns) {
             if(c.name.toLowerCase().equals(colName.toLowerCase()))
@@ -176,6 +253,10 @@ public class Table {
             sb.replace(sb.length()-match.length(), sb.length(), "");
     }
 
+    /**
+     * Gets the SQL statement to populate this table
+     * @return the Statement that populates this table (with the current table content)
+     */
     String getPopulationStatement() {
         StringBuilder psb = new StringBuilder()
                 .append("INSERT INTO `" + this.tableName +"` (");
@@ -209,6 +290,10 @@ public class Table {
         return psb.toString();
     }
 
+    /**
+     * Get the statement that creates this table in a schema
+     * @return the SQL statement that creates this table uncluding constraints
+     */
     String getCreationStatement() {
         StringBuilder fkc = new StringBuilder();
         StringBuilder pkc = new StringBuilder()
@@ -236,8 +321,6 @@ public class Table {
             sb.append(",\n");
         }
 
-        //if(sb.lastIndexOf(",") != -1)
-        //    sb.replace(sb.length()-1, sb.length(), "");
         sb.append(fkc.toString());
 
         if(pkc.lastIndexOf(",") != -1)

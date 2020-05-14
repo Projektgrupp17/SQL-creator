@@ -1,7 +1,7 @@
 <component name="ProjectRunConfigurationManager">
   <configuration default="false" name="main" type="Application" factoryName="Application" nameIsGenerated="true">
-    <option name="MAIN_CLASS_NAME" value="fredriksonsound.sql.main" />
-    <module name="SQL-generator_main" />
+    <option name="MAIN_CLASS_NAME" value="kth.projektgrupp17.sql.main" />
+    <module name="SQL-generator.main" />
     <extension name="coverage">
       <pattern>
         <option name="PATTERN" value="fredriksonsound.*" />

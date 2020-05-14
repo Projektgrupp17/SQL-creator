@@ -1,4 +1,8 @@
-package fredriksonsound.sql.DB;
+/**
+ * Author: Magnus Fredriksson
+ */
+
+package kth.projektgrupp17.sql.DB;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -6,6 +10,7 @@ import java.util.Arrays;
 public class IoTProject {
     /**
      * All the tables complete with attributes and PK, FK constraints
+     * This is based on the database spec created in lucidchart.
      * @return list of tables
      */
     public static ArrayList<Table> tables() {

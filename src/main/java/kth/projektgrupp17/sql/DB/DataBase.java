@@ -1,38 +1,30 @@
-package fredriksonsound.sql.DB;
+/**
+ * Author: Magnus Fredriksson
+ */
 
-//import org.dom4j.Document;
+package kth.projektgrupp17.sql.DB;
 
 import java.util.ArrayList;
 
-
-
+/**
+ * Represents an entire MySQL database
+ */
 public class DataBase {
     String name;
     ArrayList<Table> tables = new ArrayList<>();
 
+    /**
+     * Creates a new database schema with specified name
+     * @param name the schema name
+     */
     public DataBase(String name) { this.name = name; }
 
+    /**
+     * Adds a table to the database
+     * @param t the table to add
+     */
     public void addTable(Table t) { this.tables.add(t); }
 
-    /**
-     * Creates an XML version of the database including all data
-     * @return a String representation of an XML document for use in e.g. Basex
-     */
-    /*
-    public Document toXMLImpl() {
-        return XMLdb.dbToXMLImpl(this);
-    }
-    */
-
-    /**
-     * Creates an XML version of the schema matching the database
-     * @return an XML schema matching the db.
-     */
-    /*
-    public Document toXMLSchema() {
-        return XMLdb.dbToXMLSchema(this);
-    }
-    */
     /**
      * Generates the SQL statements necessary to recreate the database.
      * @return the String representation of the SQL for this database
