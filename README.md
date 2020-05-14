@@ -10,6 +10,11 @@ Based on the database specification made in lucidchart
 
 * Specification ius always up-to-date with the design, and easily generated and copied into projects that depend on it. 
 
+## Dependencies
+External dependencies are managed by gradle
+
+see **build-gradle**
+
 
 ## usage 
-`javac kth.projektgrupp17.sql.main.java && java kth.projektgrupp17.sql.main`
+**javac kth.projektgrupp17.sql.main.java && java kth.projektgrupp17.sql.main**
