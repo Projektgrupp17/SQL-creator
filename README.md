@@ -12,5 +12,4 @@ Based on the database specification made in lucidchart
 
 
 ## usage 
-
 `javac kth.projektgrupp17.sql.main.java && java kth.projektgrupp17.sql.main`
